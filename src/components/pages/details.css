@@ -222,9 +222,7 @@ i {
   cursor: pointer;
 }
 .rig {
-  width: 30%;
-  margin-right: 0;
-  align-self: start;
+  flex: 1;
   background: #181e25;
   /* overflow-x: scroll; */
 }
