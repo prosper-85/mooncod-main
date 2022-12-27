@@ -349,7 +349,7 @@ const Details = () => {
                     <span>🌝</span>
                   </p>
                 </div>
-                <hr />
+                <hr className=" my-5" />
                 <span className="schart">
                   {btn === "price" ? (
                     <Chart title={name} id={id} />
