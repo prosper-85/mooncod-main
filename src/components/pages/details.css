@@ -226,7 +226,7 @@ i {
   margin-right: 0;
   align-self: start;
   background: #181e25;
-  overflow-x: scroll;
+  /* overflow-x: scroll; */
 }
 .subrig {
   display: flex;
@@ -235,10 +235,10 @@ i {
   justify-content: space-between;
 }
 .sbg {
-  padding: 2rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 .wrap {
   display: flex;

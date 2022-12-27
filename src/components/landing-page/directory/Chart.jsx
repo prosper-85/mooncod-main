@@ -74,8 +74,8 @@ const Chart = ({ id, title, cap }) => {
             },
           },
           autosize: true,
-          height: 600,
-          width: 1000,
+          height: 500,
+          width: 800,
           margin: {
             l: 50,
             r: 30,
