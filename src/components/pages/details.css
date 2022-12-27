@@ -223,6 +223,7 @@ i {
 }
 .rig {
   flex: 1;
+  align-self: start;
   background: #181e25;
 }
 .subrig {
