@@ -1,14 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./details.css";
 import { useParams } from "react-router-dom";
 import Header from "./Header";
 import Chart from "../landing-page/directory/Chart";
-import { FaChevronDown, FaChevronUp, FaFacebook } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 const Details = () => {
   const { id } = useParams();
+  const [btn, setBtn] = useState("price");
   const [items, setItems] = useState([]);
-  const dataFetcher = async () => {
+
+  const handleClick = useCallback(
+    (props) => {
+      if (props === "price") {
+        setBtn("price");
+      } else if (props === "market") {
+        setBtn("market");
+      }
+    },
+    [btn]
+  );
+  const dataFetch = async () => {
     try {
       const res = await fetch(
         `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${id}&order=market_cap_desc&per_page=100&page=1&sparkline=false`
@@ -35,8 +47,6 @@ const Details = () => {
           max_supply: Msupply,
           ath,
           ath_change_percentage: athChangePercent,
-          ath_date,
-          atl,
         } = data[0];
         const newData = {
           symbol,
@@ -58,8 +68,6 @@ const Details = () => {
           Msupply,
           ath,
           athChangePercent,
-          ath_date,
-          atl,
         };
         setItems(newData);
       } else {
@@ -71,7 +79,7 @@ const Details = () => {
   };
 
   useEffect(() => {
-    dataFetcher();
+    dataFetch();
   }, [id]);
 
   const {
@@ -94,10 +102,7 @@ const Details = () => {
     Msupply,
     ath,
     athChangePercent,
-    ath_date,
-    atl,
   } = items;
-
   return (
     <>
       <Header />
@@ -108,7 +113,7 @@ const Details = () => {
               <p>
                 Criptocurrency / <b>{name}</b>
               </p>
-              <ul className="top">
+              {/* <ul className="top">
                 <li className="dlist">
                   Buy
                   <span>
@@ -133,7 +138,7 @@ const Details = () => {
                     <FaChevronDown />
                   </span>
                 </li>
-              </ul>
+              </ul> */}
             </div>
             <div className="conc">
               <div className="text">
@@ -141,7 +146,7 @@ const Details = () => {
                   <img src={image} alt={name} className="img" />
                   <h5>{name}</h5>
                 </div>
-                <h4> </h4>
+                <h4>${Cprice} </h4>
                 <p>Tags</p>
                 <div className="sbtn">
                   <p>Mireoble</p>
@@ -190,14 +195,19 @@ const Details = () => {
                 <p className="pm">
                   Market cap <i>i</i>
                 </p>
-
                 <h5 className="h5">
                   <span style={{ color: "rgb(212, 208, 208)" }}>$</span>
                   {Mcap}
                 </h5>
-                <p className="widg">
+                <p
+                  className={McapChangePercent > 0 ? "widg cols" : "widg cold"}
+                >
                   <span>
-                    <FaChevronUp style={{ color: "green" }} />
+                    {McapChangePercent > 0 ? (
+                      <FaChevronUp />
+                    ) : (
+                      <FaChevronDown />
+                    )}
                   </span>
                   {`${McapChangePercent}%`}
                 </p>
@@ -206,16 +216,21 @@ const Details = () => {
                 <p className="pm">
                   Fully Diluted <i>i</i>
                 </p>
-
                 <h5 className="h5">
                   <span style={{ color: "rgb(212, 208, 208)" }}>$</span>
                   {diluted}
                 </h5>
-                <p className="widg">
-                  <span>
-                    <FaChevronUp style={{ color: "green" }} />
+                <p
+                // className={McapChangePercent > 0 ? "widg cols" : "widg cold"}
+                >
+                  {/* <span>
+                    {McapChangePercent > 0 ? (
+                      <FaChevronUp />
+                    ) : (
+                      <FaChevronDown />
+                    )}
                   </span>
-                  0.75%
+                  {`${McapChangePercent}%`} */}
                 </p>
               </div>
               <div className="bgsub">
@@ -227,11 +242,17 @@ const Details = () => {
                   <span style={{ color: "rgb(212, 208, 208)" }}>$</span>
                   {volume}
                 </h5>
-                <p className="widg">
-                  <span>
-                    <FaChevronUp style={{ color: "green" }} />
+                <p
+                // className={McapChangePercent > 0 ? "widg cols" : "widg cold"}
+                >
+                  {/* <span>
+                    {McapChangePercent > 0 ? (
+                      <FaChevronUp />
+                    ) : (
+                      <FaChevronDown />
+                    )}
                   </span>
-                  8.75%
+                  {`${McapChangePercent}%`} */}
                 </p>
               </div>
               <div className="bgsub">
@@ -248,47 +269,93 @@ const Details = () => {
             </div>
             <div className="chartc">
               <div className="lef">
-                <div className="lis">
-                  <p className="ui">
-                    <span>Overview</span>
-                    <span>Market</span>
-                    <span>Wallets</span>
-                    <span>Ratings</span>
-                    <span>Analysis</span>
-                    <span>Price estimates</span>
+                {/* <div className="lis">
+                  <p className="ui"> */}
+                {/* <span>Overview</span>
+                    <span className="p-1 rounded-lg px-2 hover:text-blue-400 hover:border-b-2 hover:border-blue-400 cursor-pointer">
+                      Market
+                    </span>
+                    <span className="p-1 rounded-lg px-2 hover:text-blue-400 hover:border-b-2 hover:border-blue-400 cursor-pointer">
+                      Wallets
+                    </span>
+                    <span className="p-1 rounded-lg px-2 hover:text-blue-400 hover:border-b-2 hover:border-blue-600 cursor-pointer">
+                      Ratings
+                    </span>
+                    <span className="p-1 rounded-lg px-2 hover:text-blue-400 hover:border-b-2 hover:border-blue-600 cursor-pointer">
+                      Analysis
+                    </span>
+                    <span className="p-1 rounded-lg px-2 hover:text-blue-400 hover:border-b-2 hover:border-blue-600 cursor-pointer">
+                      Estimates
+                    </span> */}
+                {/* </p> */}
+                {/* <p className="ni">
+                    <span>🍑</span>
+                    <span>🌕</span>
+                    <span>🌝</span>
+                  </p> */}
+                {/* </div> */}
+                {/* <hr /> */}
+                <div className=" m-5 mx-9 flex items-center justify-between">
+                  <p className="flex space-x-2">
+                    <span
+                      onClick={() => handleClick("price")}
+                      className={
+                        btn === "price"
+                          ? "bg-blue-600 p-1 px-2 rounded-lg hover:text-blue-400 cursor-pointer"
+                          : "p-1 rounded-lg px-2 hover:text-blue-400 cursor-pointer"
+                      }
+                    >
+                      Price
+                    </span>
+                    <span
+                      onClick={() => handleClick("market")}
+                      className={
+                        btn === "market"
+                          ? "bg-blue-600 p-1 rounded-lg hover:text-blue-400 cursor-pointer"
+                          : "p-1 rounded-lg px-2 hover:text-blue-400 cursor-pointer inline-block"
+                      }
+                    >
+                      Market cap
+                    </span>
+                    {/* <span
+                      onClick={() => handleClick("trend")}
+                      className={
+                        btn === "trend"
+                          ? "bg-blue-600 p-1 px-2 rounded-lg hover:text-blue-400 cursor-pointer"
+                          : "p-1 rounded-lg px-2 hover:text-blue-400 cursor-pointer add"
+                      }
+                    >
+                      Trending
+                    </span> */}
                   </p>
-                  <p className="ni">
-                    <span>
-                      🍑
-                      {/* <FaFacebook style={{ fontSize: "15px" }} /> */}
+                  <p className="space-x-5 add">
+                    <span className=" bg-blue-600 p-1 rounded-lg">USD</span>
+                    <span>{`${symbol}`.toUpperCase()}</span>
+                  </p>
+                  {/* <p className="add">
+                    <span className="bg-blue-600 p-1 px-2 rounded-lg hover:text-blue-400 cursor-pointer">
+                      Day
                     </span>
-                    <span>
-                      🌕
-                      {/* <FaFacebook style={{ fontSize: "15px" }} /> */}
+                    <span className=" p-1 px-2 rounded-lg hover:text-blue-400 cursor-pointer">
+                      Month
                     </span>
-                    <span>
-                      🌝
-                      {/* <FaFacebook style={{ fontSize: "15px" }} /> */}
+                    <span className=" p-1 px-2 rounded-lg hover:text-blue-400 cursor-pointer">
+                      Year
                     </span>
+                  </p> */}
+                  <p className="ni add">
+                    <span>🍑</span>
+                    <span>🌕</span>
+                    <span>🌝</span>
                   </p>
                 </div>
                 <hr />
-                <div className="lis add">
-                  <p className="ui">
-                    <span className="day">Price</span>
-                    <span>Market cap</span>
-                    <span>Trending</span>
-                    <span>USD</span>
-                    <span>{`${symbol}`.toUpperCase()}</span>
-                  </p>
-                  <p className="ni">
-                    <span className="day">Day</span>
-                    <span>Month</span>
-                    <span>Year</span>
-                  </p>
-                </div>
                 <span className="schart">
-                  <Chart title={name} id={id} />
+                  {btn === "price" ? (
+                    <Chart title={name} id={id} />
+                  ) : (
+                    <Chart title={name} id={id} cap="market" />
+                  )}
                 </span>
               </div>
               <div className="rig">
@@ -309,7 +376,16 @@ const Details = () => {
                   <hr />
                   <div className="wrap">
                     <p className="sn">Price change</p>
-                    <p>{PchangePercent}%</p>
+                    <p
+                      className={
+                        PchangePercent > 0
+                          ? "flex items-center cols gap-1"
+                          : "flex items-center cold gap-1"
+                      }
+                    >
+                      {PchangePercent > 0 ? <FaChevronUp /> : <FaChevronDown />}
+                      {PchangePercent}%
+                    </p>
                   </div>
                   <hr />
                   <div className="wrap">
@@ -342,9 +418,19 @@ const Details = () => {
                       <p className="sn">Market cap</p>
                       <p>${Mcap}</p>
                     </span>
-                    <span>
-                      <FaChevronDown />
-                      0.05%
+                    <span
+                      className={
+                        McapChangePercent > 0
+                          ? "flex items-center cols gap-1"
+                          : "flex items-center cold gap-1"
+                      }
+                    >
+                      {McapChangePercent > 0 ? (
+                        <FaChevronUp />
+                      ) : (
+                        <FaChevronDown />
+                      )}
+                      {McapChangePercent}
                     </span>
                   </div>
                 </div>
